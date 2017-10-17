@@ -54,18 +54,21 @@ Querying Data (SELECT)
 
 * Basic structure of a SELECT statement
 
+    ~~~
     SELECT <column list>
     FROM <table>
     WHERE <filter criteria>
     ORDER BY <column list> [DESC]
-
+    ~~~
 
 Selection Criteria
 ------------------
 
 * Selection criteria at its most basic: single equality expression
 
+    ~~~
     WHERE <column> = <value>
+    ~~~
 
 * Full suite of comparison operators are available
     * `=`: eqality
@@ -77,7 +80,9 @@ Selection Criteria
 
 * Multiple subexpressions can be connected with `AND`/`OR`
 
+    ~~~
     WHERE <column1> = <value> AND <column2> = <value>
+    ~~~
 
 * Other filter expressions are available
     * `LIKE`: pattern matching
@@ -89,25 +94,31 @@ Joins
 * Without filter criteria SQL will generate the cartesian product of all tables
 * Multiple tables can be linked correctly by specifying join criteria
 
+    ~~~
     SELECT <column list>
     FROM <table>
     JOIN <table2> ON <table.id> = <table2.t1_id>
-
+    ~~~
+    
 
 Updating Data (UPDATE/DELETE)
 -----------------------------
 
 * `INSERT` statements create additional rows
 
+    ~~~
     INSERT INTO <table> (<column list>)
     VALUES (<value list>)
-
+    ~~~
+    
 * `UPDATE` statements modify existing data
 
+    ~~~
     UPDATE <table>
     SET <value list>
     WHERE <filter criteria>
-
+    ~~~
+    
 Creating Views
 --------------
 
@@ -124,29 +135,39 @@ PostgreSQL Specifics
 
 * HSTORE syntax
 
+    ~~~
     udf_data -> 'field'
+    ~~~
 
 * ARRAY syntax (NB: Arrays use 1-based indexing)
 
+    ~~~
     array_field[1]
+    ~~~
 
 Useful Queries
 --------------
 
 * Copying one user's password to another
 
+    ~~~
     UPDATE users SET password = (
         SELECT password FROM users WHERE username = 'bob')
     WHERE username = 'sue'
+    ~~~
 
 * Removing record locks
 
+    ~~~
     TRUNCATE TABLE system_record_locks
+    ~~~
 
 * Finding orphaned records
 
+    ~~~
     SELECT id, order_no
     FROM sales_order_items AS item
     WHERE NOT EXISTS (
         SELECT * FROM sales_orders AS ord
         WHERE ord.order_no = item.order_no)
+    ~~~
