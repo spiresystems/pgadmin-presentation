@@ -20,6 +20,7 @@ The pgAdmin User Interface
     * Loading and saving queries
     * Recalling previously run queries
     * Executing only part of a query
+* pgAdmin contains a utility to construct a SELECT statement graphically
 
 
 Spire Database Overview
@@ -46,6 +47,8 @@ Basic SQL Syntax
 ----------------
 
 * String literals must be enclosed in single quotes
+* Comments begin with two hyphens and extend to the end of line
+    `-- This is a valid SQL comment`
 * SQL treats all identifiers as lower case unless enclosed in double quotes
 
 Querying Data (SELECT)
@@ -105,14 +108,7 @@ Joins
       exist
 
 
-
-Graphical Query Builder
------------------------
-
-* pgAdmin contains a utility to construct a SELECT statement graphically
-
-
-Updating Data (UPDATE/DELETE)
+Updating Data (INSERT/UPDATE/DELETE)
 -----------------------------
 
 * `INSERT` statements create additional rows
@@ -122,13 +118,44 @@ Updating Data (UPDATE/DELETE)
     VALUES (<value list>)
     ~~~
 
-* `UPDATE` statements modify existing data
+* `UPDATE` statements modify existing rows
 
     ~~~
     UPDATE <table>
     SET <value list>
     WHERE <filter criteria>
     ~~~
+
+* `DELETE` statements remove existing rows
+
+    ~~~
+    DELETE FROM <table>
+    WHERE <filter criteria>
+    ~~~
+
+
+PostgreSQL Specifics
+--------------------
+
+* HSTORE syntax
+
+    ~~~
+    udf_data -> 'field'
+    ~~~
+
+* Handle missing UDF fields
+    * Missing UDF fields will be `NULL`, use `COALESCE` to get a default value
+
+    ~~~
+    COALESCE(udf_data->'field', 0)
+    ~~~
+
+* ARRAY syntax (NB: Arrays use 1-based indexing)
+
+    ~~~
+    array_field[1]
+    ~~~
+
 
 Creating Views
 --------------
@@ -141,20 +168,6 @@ Creating Views
 * Views created as stored procedures do not create a dependency, allowing
   database migrations to run normally.
 
-PostgreSQL Specifics
---------------------
-
-* HSTORE syntax
-
-    ~~~
-    udf_data -> 'field'
-    ~~~
-
-* ARRAY syntax (NB: Arrays use 1-based indexing)
-
-    ~~~
-    array_field[1]
-    ~~~
 
 Useful Queries
 --------------
@@ -182,3 +195,31 @@ Useful Queries
         SELECT * FROM sales_orders AS ord
         WHERE ord.order_no = item.order_no)
     ~~~
+
+* List active database connections
+
+    ~~~
+    SELECT * FROM pg_stat_activity
+    ~~~
+
+* Terminate an active connection
+
+    ~~~
+    SELECT pg_terminate_backend(<pid>)
+    ~~~
+
+
+Useful Stored Procedures
+------------------------
+
+* `ap_aged_list(<date>)`
+* `ap_aged_summary(<date>, <vendor_no>)`
+* `ap_applied_amt(<txn_id>, <date>)`
+* `ar_aged_list(<date>)`
+* `ar_aged_summary(<date>, <customer_no>)`
+* `ar_applied_amt(<txn_id>, <date>)`
+* `convert_currency_from(<amount>, <method>, <rate>, <decimals>)`
+* `convert_currency_to(<amount>, <method>, <rate>, <decimals>)`
+* `format_phone_number(<kind>, <format#>, <digits>)`
+* `format_segments(<account_no>)`
+* `gl_period_balances(<date>)`
