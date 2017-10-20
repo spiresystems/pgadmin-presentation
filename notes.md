@@ -10,7 +10,6 @@ Warnings and Disclaimers
 * Spire support won't help you; Google is your friend
     * https://www.postgresql.org/docs/9.3/static/index.html
 
-
 The pgAdmin User Interface
 --------------------------
 
@@ -99,7 +98,19 @@ Joins
     FROM <table>
     JOIN <table2> ON <table.id> = <table2.t1_id>
     ~~~
-    
+
+* Types of JOINS
+    * INNER JOIN (default) requires that records exist for both tables
+    * LEFT JOIN returns NULL for all joined columns where a record doesn't
+      exist
+
+
+
+Graphical Query Builder
+-----------------------
+
+* pgAdmin contains a utility to construct a SELECT statement graphically
+
 
 Updating Data (UPDATE/DELETE)
 -----------------------------
@@ -110,7 +121,7 @@ Updating Data (UPDATE/DELETE)
     INSERT INTO <table> (<column list>)
     VALUES (<value list>)
     ~~~
-    
+
 * `UPDATE` statements modify existing data
 
     ~~~
@@ -118,7 +129,7 @@ Updating Data (UPDATE/DELETE)
     SET <value list>
     WHERE <filter criteria>
     ~~~
-    
+
 Creating Views
 --------------
 
